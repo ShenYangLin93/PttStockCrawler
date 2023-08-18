@@ -1,15 +1,17 @@
 # Description
 ```bash
-Ptt Stock Crawler crawls posts and tweets of certain users from the PTT Stock forum.
+This repo crawls posts and tweets of certain users from the PTT Stock forum.
 You may found some interesting, intrcutive or even profitable information from those messages.
 ```
 
-# Installation
+# Installation(Windows)
 ## Assume MySQL is installed.
-## Run following command to install requirements:
+## Run the following command to install requirements:
 ```bash
 # for virtual environment
 pip install pipenv
+# init a virtualenv with python3.9
+pipenv --python 3.9
 # install requirements
 pipenv install
 ```
@@ -24,5 +26,3 @@ pipenv run python crawler_scheduler.py
 # Start the notifying process.
 pipenv run python notifer_scheduler.py
 ```
-
-Several settings can be changed inside config.yaml.
