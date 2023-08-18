@@ -4,16 +4,10 @@ import requests
 from pyquery import PyQuery as pq
 from datetime import datetime
 from backend.db import save_post_to_db
-import yaml
-from yaml.loader import SafeLoader
 
 
 class Crawler:
-    def __init__(self) -> None:
-
-        with open('./config.yaml', encoding="utf-8") as f:
-            config = yaml.load(f, Loader=SafeLoader)
-            
+    def __init__(self, config) -> None:
         self.ptt_stock_url = config.get("pttStockUrl")
         self.celebrity_list = config.get("celebrityList", [])
         self.check_page_num = config.get("checkPageNum", 6)

@@ -2,10 +2,15 @@ import time
 import datetime
 from apscheduler.schedulers.background import BackgroundScheduler
 from crawler.crawler import Crawler
+import yaml
+from yaml.loader import SafeLoader
+
 
 def start_crawling():
     print(f"Start crawling PTT Stock at {datetime.datetime.today()}.")
-    crawler = Crawler()
+    with open('./config.yaml', encoding="utf-8") as f:
+        config = yaml.load(f, Loader=SafeLoader)
+    crawler = Crawler(config)
     crawler.crawl()
 
 def main():
