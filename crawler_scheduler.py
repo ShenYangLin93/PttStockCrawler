@@ -12,6 +12,7 @@ def start_crawling():
         config = yaml.load(f, Loader=SafeLoader)
     crawler = Crawler(config)
     crawler.crawl()
+    print(f"Finish crawling PTT Stock at {datetime.datetime.today()}.")
 
 def main():
     scheduler = BackgroundScheduler(timezone="Asia/Taipei")

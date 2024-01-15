@@ -24,7 +24,7 @@ def save_post_to_db(result_post_obj: dict):
 
             url = result_post_obj["url"]
             slash_index = url.rfind("/")
-            primary_key = url[slash_index:]
+            url = url[slash_index:]
 
             author = result_post_obj["author"]
             nick_name_index = author.find('(')
@@ -41,20 +41,20 @@ def save_post_to_db(result_post_obj: dict):
             trans = db_conn.begin()
             try:
                 sql_cmd = f"""
-                    INSERT INTO post
-                    VALUES ('{primary_key}', '{encoded_author}', '{encoded_pushes}', 1)
+                    INSERT INTO post (url, author, pushes, status)
+                    VALUES ('{url}', '{encoded_author}', '{encoded_pushes}', 'Y')
                 """
                 db_conn.execute(sql_cmd)
             except exc.SQLAlchemyError as e:
-                if check_post_status(primary_key, encoded_pushes):
+                if check_post_status(url, encoded_pushes):
                     sql_cmd = f"""
-                        UPDATE post SET pushes = '{encoded_pushes}', status = 1
-                        WHERE url = '{primary_key}'
+                        UPDATE post SET pushes = '{encoded_pushes}', status = 'Y'
+                        WHERE url = '{url}'
                     """
                     db_conn.execute(sql_cmd)
-                    print(f"{primary_key} updated.")
+                    print(f"{url} updated.")
                 else:
-                    print(f"{primary_key} is the latest.")
+                    print(f"{url} is the latest.")
             
             trans.commit()
 
@@ -64,7 +64,7 @@ def request_updated_post():
     request_sql_cmd = f"""
             SELECT *
             FROM post
-            WHERE status = 1
+            WHERE status = 'Y'
         """
     request_data = db_conn.execute(request_sql_cmd)
     trans.commit()
@@ -74,7 +74,7 @@ def update_post_status(url: str):
     db_conn = router.mysql_conn
     trans = db_conn.begin()
     update_sql_cmd = f"""
-            UPDATE post SET status = 0
+            UPDATE post SET status = 'N'
             WHERE url = '{url}'
         """
     db_conn.execute(update_sql_cmd)

@@ -33,5 +33,5 @@ def send_message():
             send(message + "\n".join(pushes))
         update_post_status(url)
     send(f"PTT Stock at {datetime.datetime.today()}.")
-    print("Finish Sending.")
+
 

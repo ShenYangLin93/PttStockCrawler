@@ -6,6 +6,7 @@ from backend.line_notification import send_message
 def start_notify():
     print(f"Start Notifying at {datetime.datetime.today()}.")
     send_message()
+    print(f"Finish Notifying at {datetime.datetime.today()}.")
 
 def main():
     scheduler = BackgroundScheduler(timezone="Asia/Taipei")
@@ -13,7 +14,7 @@ def main():
         id="send_ptt_stock_celebrity_pushes",
         func=start_notify,
         trigger="interval",
-        hours=1.0,
+        hours=0.5,
         start_date=datetime.datetime.now(),
         next_run_time=datetime.datetime.now()
     )

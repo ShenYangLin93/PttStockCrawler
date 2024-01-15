@@ -1,7 +1,7 @@
 # Description
 ```bash
-This repo crawls posts and tweets of certain users from the PTT Stock forum.
-You may found some interesting, intrcutive or even profitable information from those messages.
+This repo crawls posts and tweets of certain users from the PTT Stock forum and sends to LINE.
+You may found some interesting, instrcutive or even profitable information from those messages.
 ```
 
 # Installation(Windows)

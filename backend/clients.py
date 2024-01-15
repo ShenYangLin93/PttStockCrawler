@@ -13,10 +13,11 @@ schema_address = f"mysql+pymysql://{db_user}:{db_pswd}@{db_host}:{db_port}/{db_n
 
 create_table_cmd = '''
     CREATE TABLE post (
-        url VARCHAR(50) PRIMARY KEY,
+        id  INT PRIMARY KEY AUTO_INCREMENT,
+        url VARCHAR(50) UNIQUE,
         author VARCHAR(50),
         pushes LONGTEXT,
-        status INT
+        status CHAR(1)
     )
 '''
 
@@ -36,13 +37,13 @@ def create_db_if_not_exists():
 
 
 def create_table_if_not_exist():
-        engine = create_engine(schema_address)
-        result = engine.execute(f"SHOW TABLES LIKE 'post'")
-        if not result.rowcount > 0:
-            engine.execute(create_table_cmd)
-            print('Table created successfully.')
-        else:
-            print('Table already exists.')
+    engine = create_engine(schema_address)
+    result = engine.execute(f"SHOW TABLES LIKE 'post'")
+    if not result.rowcount > 0:
+        engine.execute(create_table_cmd)
+        print('Table created successfully.')
+    else:
+        print('Table already exists.')
 
 def get_mysql_connect() -> engine.base.Connection:
     engine = create_engine(schema_address)

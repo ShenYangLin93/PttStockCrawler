@@ -15,7 +15,7 @@ class Crawler:
         self.key_transform_dict = config.get("keyTransform", {})
 
     def process_post(self, post_object:dict) -> dict:
-        result_obj = {"valid": True}
+        result_obj = {"valid": False}
         post_url = post_object.get("url", "")
         if post_url:
             resp = requests.get(post_url)
@@ -39,10 +39,9 @@ class Crawler:
                             push_result_list.append(f"{user_id} {content} {push_time}")
                     except StopIteration as e:
                         continue
-                if push_result_list or result_obj.get("author", "") in self.celebrity_list:
+                if push_result_list or result_obj.get("author", "") in self.celebrity_list or "標的" in result_obj.get("title", ""):
                     result_obj["push"] = push_result_list
-                else:
-                    result_obj["valid"] = False
+                    result_obj["valid"] = True
         return result_obj
 
     def get_previous_page_and_posts(self, page_url) -> list:
@@ -86,7 +85,6 @@ class Crawler:
         current_page_url = self.ptt_stock_url
         for i in range(0, self.check_page_num):
             current_page_url = self.process_current_page(current_page_url)
-        
             
 
 if __name__ == "__main__":
