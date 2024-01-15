@@ -3,10 +3,12 @@ import datetime
 from apscheduler.schedulers.background import BackgroundScheduler
 from backend.line_notification import send_message
 
+
 def start_notify():
     print(f"Start Notifying at {datetime.datetime.today()}.")
     send_message()
     print(f"Finish Notifying at {datetime.datetime.today()}.")
+
 
 def main():
     scheduler = BackgroundScheduler(timezone="Asia/Taipei")

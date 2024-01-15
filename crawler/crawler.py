@@ -11,10 +11,10 @@ class Crawler:
         self.ptt_stock_url = config.get("pttStockUrl")
         self.celebrity_list = config.get("celebrityList", [])
         self.check_page_num = config.get("checkPageNum", 6)
-        self.request_interval = config.get("requestInterval", 5)       
+        self.request_interval = config.get("requestInterval", 5)
         self.key_transform_dict = config.get("keyTransform", {})
 
-    def process_post(self, post_object:dict) -> dict:
+    def process_post(self, post_object: dict) -> dict:
         result_obj = {"valid": False}
         post_url = post_object.get("url", "")
         if post_url:
@@ -28,15 +28,17 @@ class Crawler:
                     value = next(item(".article-meta-value").items()).text()
                     key = self.key_transform_dict[tag]
                     result_obj[key] = value
-                
+
                 push_result_list = []
                 for item in html_data("#main-container #main-content .push").items():
                     try:
                         user_id = next(item(".push-userid").items()).text()
                         content = next(item(".push-content").items()).text()
-                        push_time = next(item(".push-ipdatetime").items()).text()
+                        push_time = next(
+                            item(".push-ipdatetime").items()).text()
                         if user_id in self.celebrity_list:
-                            push_result_list.append(f"{user_id} {content} {push_time}")
+                            push_result_list.append(
+                                f"{user_id} {content} {push_time}")
                     except StopIteration as e:
                         continue
                 if push_result_list or result_obj.get("author", "") in self.celebrity_list or "標的" in result_obj.get("title", ""):
@@ -53,14 +55,16 @@ class Crawler:
 
             selector = "#main-container .action-bar .btn-group-paging"
             item = next(html_data(selector).items())
-            previous_page_url = "https://www.ptt.cc/" + item('a:contains("上頁")').attr("href")
+            previous_page_url = "https://www.ptt.cc/" + \
+                item('a:contains("上頁")').attr("href")
 
             selector = "#main-container .bbs-screen .r-ent"
             for item in html_data(selector).items():
                 try:
                     popularity = next(item(".nrec").items()).text()
                     title = next(item(".title").items()).text()
-                    post_url = "https://www.ptt.cc/" + next(item(".title a").items()).attr("href")
+                    post_url = "https://www.ptt.cc/" + \
+                        next(item(".title a").items()).attr("href")
                     author = next(item(".author").items()).text()
                     # print(popularity, title, author, post_url)
                     post_object = {
@@ -73,9 +77,10 @@ class Crawler:
                 except Exception as e:
                     pass
         return previous_page_url, post_object_list
-    
-    def process_current_page(self, current_url:str) -> str:
-        previous_page_url, post_object_list = self.get_previous_page_and_posts(current_url)
+
+    def process_current_page(self, current_url: str) -> str:
+        previous_page_url, post_object_list = self.get_previous_page_and_posts(
+            current_url)
         for post_obj in post_object_list:
             result_post_obj = self.process_post(post_obj)
             save_post_to_db(result_post_obj)
@@ -85,7 +90,7 @@ class Crawler:
         current_page_url = self.ptt_stock_url
         for i in range(0, self.check_page_num):
             current_page_url = self.process_current_page(current_page_url)
-            
+
 
 if __name__ == "__main__":
     crawler = Crawler()

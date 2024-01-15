@@ -45,10 +45,8 @@ def create_table_if_not_exist():
     else:
         print('Table already exists.')
 
+
 def get_mysql_connect() -> engine.base.Connection:
     engine = create_engine(schema_address)
     connect = engine.connect()
     return connect
-
-
-    

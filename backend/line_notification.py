@@ -5,21 +5,24 @@ import datetime
 from backend.db import request_updated_post, update_post_status
 
 
-def divide_chunks(l: list, n: int):  
+def divide_chunks(l: list, n: int):
     # looping till length l
-    for i in range(0, len(l), n): 
+    for i in range(0, len(l), n):
         yield l[i:i + n]
+
 
 def send(message: str):
     line_token = os.getenv('LINE_TOKEN')
-    headers = { "Authorization": "Bearer " + line_token }
-    data = { 'message': message }
+    headers = {"Authorization": "Bearer " + line_token}
+    data = {'message': message}
     try:
-        requests.post("https://notify-api.line.me/api/notify", headers=headers, data=data)
+        requests.post("https://notify-api.line.me/api/notify",
+                      headers=headers, data=data)
     except TimeoutError:
         print("Line notification timeout!")
     except Exception as e:
         print(e)
+
 
 def send_message():
     request_data = request_updated_post()
@@ -33,5 +36,3 @@ def send_message():
             send(message + "\n".join(pushes))
         update_post_status(url)
     send(f"PTT Stock at {datetime.datetime.today()}.")
-
-

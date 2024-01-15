@@ -3,8 +3,10 @@ import typing
 from sqlalchemy import engine
 from backend import clients
 
+
 def check_alive(connect: engine.base.Connection):
     connect.execute("SELECT 1 + 1")
+
 
 def reconnect(connect_func: typing.Callable,) -> engine.base.Connection:
     try:
@@ -12,6 +14,7 @@ def reconnect(connect_func: typing.Callable,) -> engine.base.Connection:
     except Exception as e:
         print(f"{connect_func.__name__} connect, error {e}")
     return connect
+
 
 def check_connect_alive(connect: engine.base.Connection, connect_func: typing.Callable,):
     if connect:
@@ -27,6 +30,7 @@ def check_connect_alive(connect: engine.base.Connection, connect_func: typing.Ca
         connect = reconnect(connect_func)
         return check_connect_alive(connect, connect_func)
 
+
 class Router:
     def __init__(self) -> None:
         clients.create_db_if_not_exists()
@@ -35,12 +39,12 @@ class Router:
 
     def check_mysql_conn_alive(self,):
         self._mysql_conn = check_connect_alive(
-            self._mysql_conn, 
+            self._mysql_conn,
             clients.get_mysql_connect
         )
 
         return self._mysql_conn
-    
+
     @property
     def mysql_conn(self):
         return self.check_mysql_conn_alive()

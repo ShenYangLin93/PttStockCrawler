@@ -14,6 +14,7 @@ def start_crawling():
     crawler.crawl()
     print(f"Finish crawling PTT Stock at {datetime.datetime.today()}.")
 
+
 def main():
     scheduler = BackgroundScheduler(timezone="Asia/Taipei")
     scheduler.add_job(
